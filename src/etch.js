@@ -23,6 +23,34 @@ function getTileDataUri(fillType, density) {
 	return uri;
 } 
 
+const LAYER_ATTR = "data-etch-layer";
+
+// mask-image affects an element's whole painted output (content included), not
+// just its background, so the fill can't live directly on a content-bearing
+// element. It gets its own layer, behind the content, instead.
+function getOrCreateFillLayer(el) {
+	let layer = el.querySelector(`:scope > [${LAYER_ATTR}]`);
+	if (layer) return layer;
+
+	if (getComputedStyle(el).position === "static") {
+		el.style.position = "relative";
+	}
+	// Without a real stacking context, the layer's negative z-index escapes past
+	// el entirely and sinks behind the whole page instead of just behind el's content.
+	el.style.isolation = "isolate";
+
+	layer = document.createElement("div");
+	layer.setAttribute(LAYER_ATTR, "");
+	layer.setAttribute("aria-hidden", "true");
+	layer.style.position = "absolute";
+	layer.style.inset = "0";
+	layer.style.zIndex = "-1";
+	layer.style.pointerEvents = "none";
+	layer.style.borderRadius = "inherit";
+	el.prepend(layer);
+	return layer;
+}
+
 function applyFill(el) {
 	const fillType = el.dataset.fill;
 	if (!fillType || !generators[fillType]) return;
@@ -31,17 +59,16 @@ function applyFill(el) {
 	const uri = getTileDataUri(fillType, density);
 	if (!uri) return;
 
-	const mask = `url("${uri}")`;
-	el.style.maskImage = mask;
-	el.style.webkitMaskImage = mask;
-	el.style.maskRepeat = "repeat";
-	el.style.webkitMaskRepeat = "repeat";
-	el.style.maskPosition = "0 0";
-	el.style.webkitMaskPosition = "0 0";
+	const layer = getOrCreateFillLayer(el);
 
-	if (el.dataset.fillColor) {
-		el.style.backgroundColor = el.dataset.fillColor;
-	}
+	const mask = `url("${uri}")`;
+	layer.style.maskImage = mask;
+	layer.style.webkitMaskImage = mask;
+	layer.style.maskRepeat = "repeat";
+	layer.style.webkitMaskRepeat = "repeat";
+	layer.style.maskPosition = "0 0";
+	layer.style.webkitMaskPosition = "0 0";
+	layer.style.backgroundColor = el.dataset.fillColor || "currentColor";
 }
 
 function scan(root = document) {
