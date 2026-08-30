@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>etch.js: proof of concept</title>
+<style>
+	html, body {
+		margin: 0;
+		font-family: system-ui, sans-serif;
+		background: #1a1a1a;
+		color: #eee;
+		padding: 2rem;
+	}
+	h1 { font-size: 1.2rem; font-weight: 600; }
+	h2 { font-size: 1.1rem; font-weight: 600; }
+	p { color: #999; font-size: 0.85rem; max-width: 60ch; }
+	button { padding: 20px;}
+
+	.row {
+		display: flex;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+		margin-bottom: 2rem;
+	}
+
+	.stipple {
+		resize: both;
+		overflow: auto;
+		border: 1px dashed #444;
+	}
+
+	.box { width: 220px; height: 160px; }
+
+	.scroll-test {
+		margin-top: 2rem;
+	}
+	.scroll-test .stipple {
+		width: 100%;
+		height: 400px;
+		resize: none;
+	}
+	.scroll-spacer {
+		height: 600px;
+	}
+</style>
+</head>
+<body>
+	<h1>etch.js demo page</h1>
+
+	<h2>Resize test</h2>
+	<p>
+		Pattern should stay consistent with no seams as box grows (grab button right corner of boxes)
+	</p>
+
+	<div class="row">
+		<div class="stipple box" data-fill="stipple" data-fill-density="15" data-fill-color="#ff4d4d"></div>
+		<div class="stipple box" data-fill="stipple" data-fill-density="50" data-fill-color="#ff4d4d"></div>
+		<div class="stipple box" data-fill="stipple" data-fill-density="90" data-fill-color="#ff4d4d"></div>
+	</div>
+
+	<div class="row">
+		<div class="stipple box" data-fill="stipple" data-fill-density="15" data-fill-color="#4dd0ff"></div>
+		<div class="stipple box" data-fill="stipple" data-fill-density="50" data-fill-color="#4dd0ff"></div>
+		<div class="stipple box" data-fill="stipple" data-fill-density="90" data-fill-color="#4dd0ff"></div>
+	</div>
+
+	<h2>scroll test</h2>
+	<p>
+		Scroll the page. The pattern should stay fixed to the element's own box, no
+		parallax/drift relative to the box itself as it moves up the viewport.
+	</p>
+	<div class="scroll-test">
+		<div class="stipple" data-fill="stipple" data-fill-density="50" data-fill-color="#ff4d4d"></div>
+	</div>
+	<div class="scroll-spacer"></div>
+
+	<h1>dynamically added (MutationObserver check)</h1>
+	<p>This box is inserted 1s after load with plain JS. It should still pick up the fill.</p>
+	<div id="dynamic-target"></div>
+
+	
+
+	<script type="module" src="../src/etch.js"></script>
+	<script type="module">
+		setTimeout(() => {
+			const el = document.createElement("div");
+			el.className = "stipple box";
+			el.dataset.fill = "stipple";
+			el.dataset.fillDensity = "60";
+			el.dataset.fillColor = "#7fff8f";
+			document.querySelector("#dynamic-target").appendChild(el);
+		}, 1000);
+	</script>
+</body>
+</html>

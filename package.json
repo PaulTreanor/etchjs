@@ -1,0 +1,9 @@
+{
+  "name": "etchjs",
+  "version": "0.1.0",
+  "description": "Fill DOM elements generated patterns.",
+  "author": "Paul Treanor",
+  "type": "module",
+  "main": "src/etch.js",
+  "license": "MIT"
+}
