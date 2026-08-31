@@ -1,34 +1,11 @@
-import { generateStippleTile } from "./patterns/stipple.js";
-
-const generators = {
-	stipple: generateStippleTile,
-};
-
-const tileCache = new Map(); // `${fillType}:${density}` -> data URI
-
-function toDataUri(svg) {
-	return `data:image/svg+xml,${encodeURIComponent(svg)}`;
-}
-
-function getTileDataUri(fillType, density) {
-	const key = `${fillType}:${density}`;
-	let uri = tileCache.get(key);
-	if (uri) return uri;
-
-	const generate = generators[fillType];
-	if (!generate) return null;
-
-	uri = toDataUri(generate(density));
-	tileCache.set(key, uri);
-	return uri;
-} 
+import { getTileDataUri } from "../core/generate.js";
 
 const LAYER_ATTR = "data-etch-layer";
 
 // mask-image affects an element's whole painted output (content included), not
 // just its background, so the fill can't live directly on a content-bearing
 // element. It gets its own layer, behind the content, instead.
-function getOrCreateFillLayer(el) {
+const getOrCreateFillLayer = (el) => {
 	let layer = el.querySelector(`:scope > [${LAYER_ATTR}]`);
 	if (layer) return layer;
 
@@ -51,9 +28,9 @@ function getOrCreateFillLayer(el) {
 	return layer;
 }
 
-function applyFill(el) {
+const applyFill = (el) => {
 	const fillType = el.dataset.fill;
-	if (!fillType || !generators[fillType]) return;
+	if (!fillType) return;
 
 	const density = Number(el.dataset.fillDensity) || 50;
 	const uri = getTileDataUri(fillType, density);
@@ -71,11 +48,11 @@ function applyFill(el) {
 	layer.style.backgroundColor = el.dataset.fillColor || "currentColor";
 }
 
-function scan(root = document) {
+const scan = (root = document) => {
 	root.querySelectorAll("[data-fill]").forEach(applyFill);
 }
 
-function observe() {
+const observe = () => {
 	const observer = new MutationObserver((mutations) => {
 		for (const mutation of mutations) {
 			if (mutation.type === "attributes" && mutation.target.hasAttribute("data-fill")) {
@@ -99,7 +76,7 @@ function observe() {
 	return observer;
 }
 
-function init() {
+const init = () => {
 	scan();
 	observe();
 }

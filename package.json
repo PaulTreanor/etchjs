@@ -4,6 +4,17 @@
   "description": "Fill DOM elements generated patterns.",
   "author": "Paul Treanor",
   "type": "module",
-  "main": "src/etch.js",
-  "license": "MIT"
+  "license": "MIT",
+  "exports": {
+    "./vanilla": "./src/vanilla/etch.js",
+    "./react": "./src/react/index.js"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  }
 }

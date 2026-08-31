@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>etch.js: react binding</title>
+<style>
+	html, body {
+		margin: 0;
+		font-family: system-ui, sans-serif;
+		background: #1a1a1a;
+		color: #eee;
+		padding: 2rem;
+	}
+	h1 { font-size: 1.2rem; font-weight: 600; }
+	p { color: #999; font-size: 0.85rem; max-width: 60ch; }
+
+	.row {
+		display: flex;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+		margin-bottom: 2rem;
+	}
+
+	.box { width: 220px; height: 160px; border: 1px dashed #444; }
+	button { padding: 20px; background-color: green; color: white; border: none; font-size: 1rem; }
+</style>
+</head>
+<body>
+	<h1>etch.js — React binding (client-only, no build step)</h1>
+	<p>
+		React loaded from a CDN via an import map, no bundler. Confirms
+		&lt;EtchFill&gt; renders content on top, fill layer behind it,
+		and that toggling density re-renders cleanly.
+	</p>
+	<div id="root"></div>
+
+	<script type="importmap">
+	{
+		"imports": {
+			"react": "https://esm.sh/react@18",
+			"react-dom/client": "https://esm.sh/react-dom@18/client"
+		}
+	}
+	</script>
+
+	<script type="module">
+		import { createElement as h, useState } from "react";
+		import { createRoot } from "react-dom/client";
+		import { EtchFill } from "../src/react/index.js";
+
+		function Demo() {
+			const [density, setDensity] = useState(50);
+
+			return h(
+				"div",
+				null,
+				h(
+					"div",
+					{ className: "row" },
+					h(EtchFill, { as: "div", className: "box", type: "stipple", density: 15, color: "#ff4d4d" }),
+					h(EtchFill, { as: "div", className: "box", type: "stipple", density: 50, color: "#ff4d4d" }),
+					h(EtchFill, { as: "div", className: "box", type: "stipple", density: 90, color: "#ff4d4d" }),
+				),
+				h(
+					EtchFill,
+					{ as: "button", type: "stipple", density, color: "#4dd0ff" },
+					"hello (density " + density + ")",
+				),
+				h(
+					"div",
+					{ style: { marginTop: "1rem" } },
+					h(
+						"button",
+						{ onClick: () => setDensity((d) => (d >= 90 ? 15 : d + 25)) },
+						"cycle density (re-render check)",
+					),
+				),
+			);
+		}
+
+		createRoot(document.getElementById("root")).render(h(Demo));
+	</script>
+</body>
+</html>
