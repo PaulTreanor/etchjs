@@ -3,20 +3,23 @@
 EtchJS is a tiny (~2kb) JS library that lets you fill elements on webpages with generated backgrounds, like stippling and cross-hatching.
 
 # Usage
+Install package
 
-Add etchjs to your package.json (`npm install etchjs`) coming soon.
+```bash
+npm install etchjs
+```
 
 ## Vanilla JS
+Import the library, then add a `data-fill` attribute to any element and the pattern is applied automatically.
 
-Add a `data-fill` attribute to any element and the pattern is applied automatically.
+```js
+import "etchjs/vanilla"; 
+```
 
 ```html
 <div data-fill="stipple" data-fill-density="60" data-fill-color="#ff4d4d"></div>
 ```
 
-```js
-import "etchjs/vanilla"; // runs once, scans the DOM and observes future changes
-```
 
 ## React
 
