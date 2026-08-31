@@ -1,14 +1,31 @@
 {
   "name": "etchjs",
   "version": "0.1.0",
-  "description": "Fill DOM elements generated patterns.",
+  "description": "Fill DOM elements with generated backgrounds: stippling, cross-hatching, and more.",
   "author": "Paul Treanor",
-  "type": "module",
   "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+
+  "files": ["src"],
+
   "exports": {
     "./vanilla": "./src/vanilla/etch.js",
-    "./react": "./src/react/index.js"
+    "./react": "./src/react/index.js",
+    "./package.json": "./package.json"
   },
+
+  "keywords": ["stipple", "pattern", "background", "dither", "cross-hatch"],
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PaulTreanor/etchjs.git"
+  },
+  "homepage": "https://github.com/PaulTreanor/etchjs#readme",
+  "bugs": {
+    "url": "https://github.com/PaulTreanor/etchjs/issues"
+  },
+
   "peerDependencies": {
     "react": ">=18"
   },
