@@ -30,17 +30,6 @@
 
 	.box { width: 220px; height: 160px; }
 
-	.scroll-test {
-		margin-top: 2rem;
-	}
-	.scroll-test .stipple {
-		width: 100%;
-		height: 400px;
-		resize: none;
-	}
-	.scroll-spacer {
-		height: 600px;
-	}
 </style>
 </head>
 <body>
@@ -53,27 +42,9 @@
 
 	<div class="row">
 		<div class="stipple box" data-fill="stipple" data-fill-density="15" data-fill-color="#ff4d4d"></div>
-		<div class="stipple box" data-fill="stipple" data-fill-density="50" data-fill-color="#ff4d4d"></div>
-		<div class="stipple box" data-fill="stipple" data-fill-density="90" data-fill-color="#ff4d4d"></div>
-	</div>
-
-	<div class="row">
-		<div class="stipple box" data-fill="stipple" data-fill-density="15" data-fill-color="#4dd0ff"></div>
-		<div class="stipple box" data-fill="stipple" data-fill-density="50" data-fill-color="#4dd0ff"></div>
-		<div class="stipple box" data-fill="stipple" data-fill-density="90" data-fill-color="#4dd0ff"></div>
 	</div>
 
 	<button data-fill="stipple" data-fill-density="100" data-fill-color="#4dd0ff">hello</button>
-
-	<h2>scroll test</h2>
-	<p>
-		Scroll the page. The pattern should stay fixed to the element's own box, no
-		parallax/drift relative to the box itself as it moves up the viewport.
-	</p>
-	<div class="scroll-test">
-		<div class="stipple" data-fill="stipple" data-fill-density="50" data-fill-color="#ff4d4d"></div>
-	</div>
-	<div class="scroll-spacer"></div>
 
 	<h1>dynamically added (MutationObserver check)</h1>
 	<p>This box is inserted 1s after load with plain JS. It should still pick up the fill.</p>

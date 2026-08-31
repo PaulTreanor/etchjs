@@ -26,7 +26,7 @@
 </style>
 </head>
 <body>
-	<h1>etch.js — React binding (client-only, no build step)</h1>
+	<h1>etchjs React binding (client-only, no build step)</h1>
 	<p>
 		React loaded from a CDN via an import map, no bundler. Confirms
 		&lt;EtchFill&gt; renders content on top, fill layer behind it,
@@ -57,23 +57,21 @@
 				h(
 					"div",
 					{ className: "row" },
-					h(EtchFill, { as: "div", className: "box", type: "stipple", density: 15, color: "#ff4d4d" }),
-					h(EtchFill, { as: "div", className: "box", type: "stipple", density: 50, color: "#ff4d4d" }),
-					h(EtchFill, { as: "div", className: "box", type: "stipple", density: 90, color: "#ff4d4d" }),
+					h(EtchFill, { as: "div", className: "box", type: "stipple", density, color: "#ff4d4d" }),
 				),
 				h(
-					EtchFill,
-					{ as: "button", type: "stipple", density, color: "#4dd0ff" },
-					"hello (density " + density + ")",
-				),
-				h(
-					"div",
-					{ style: { marginTop: "1rem" } },
-					h(
-						"button",
-						{ onClick: () => setDensity((d) => (d >= 90 ? 15 : d + 25)) },
-						"cycle density (re-render check)",
-					),
+					"label",
+					{ style: { display: "block", color: "#999", fontSize: "0.85rem" } },
+					"density: ",
+					density,
+					h("input", {
+						type: "range",
+						min: 1,
+						max: 100,
+						value: density,
+						onChange: (event) => setDensity(Number(event.target.value)),
+						style: { display: "block", width: "220px", marginTop: "0.5rem" },
+					}),
 				),
 			);
 		}
