@@ -2,6 +2,8 @@
 
 EtchJS is a tiny (~2kb) JS library that lets you fill elements on webpages with generated backgrounds, like stippling and cross-hatching.
 
+<img src="./docs/animation-example.gif" alt="Animated Stipple" width="250" />
+
 # Usage
 Install package
 
