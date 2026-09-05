@@ -1,6 +1,6 @@
 {
   "name": "etchjs",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Fill DOM elements with generated backgrounds: stippling, cross-hatching, and more.",
   "author": "Paul Treanor",
   "license": "MIT",
