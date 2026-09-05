@@ -1,13 +1,14 @@
-import { getTileDataUri } from "../core/generate.js";
+import { getTileDataUri } from "../core/generate";
+import type { FillType } from "../core/types";
 
 const LAYER_ATTR = "data-etch-layer";
 
 // mask-image affects an element's whole painted output (content included), not
 // just its background, so the fill can't live directly on a content-bearing
 // element. It gets its own layer, behind the content, instead.
-const getOrCreateFillLayer = (el) => {
-	let layer = el.querySelector(`:scope > [${LAYER_ATTR}]`);
-	if (layer) return layer;
+const getOrCreateFillLayer = (el: HTMLElement): HTMLElement => {
+	const existing = el.querySelector<HTMLElement>(`:scope > [${LAYER_ATTR}]`);
+	if (existing) return existing;
 
 	if (getComputedStyle(el).position === "static") {
 		el.style.position = "relative";
@@ -16,7 +17,7 @@ const getOrCreateFillLayer = (el) => {
 	// el entirely and sinks behind the whole page instead of just behind el's content.
 	el.style.isolation = "isolate";
 
-	layer = document.createElement("div");
+	const layer = document.createElement("div");
 	layer.setAttribute(LAYER_ATTR, "");
 	layer.setAttribute("aria-hidden", "true");
 	layer.style.position = "absolute";
@@ -26,10 +27,10 @@ const getOrCreateFillLayer = (el) => {
 	layer.style.borderRadius = "inherit";
 	el.prepend(layer);
 	return layer;
-}
+};
 
-const applyFill = (el) => {
-	const fillType = el.dataset.fill;
+const applyFill = (el: HTMLElement): void => {
+	const fillType = el.dataset.fill as FillType | undefined;
 	if (!fillType) return;
 
 	const density = Number(el.dataset.fillDensity) || 50;
@@ -46,22 +47,26 @@ const applyFill = (el) => {
 	layer.style.maskPosition = "0 0";
 	layer.style.webkitMaskPosition = "0 0";
 	layer.style.backgroundColor = el.dataset.fillColor || "currentColor";
-}
+};
 
-const scan = (root = document) => {
-	root.querySelectorAll("[data-fill]").forEach(applyFill);
-}
+const scan = (root: ParentNode = document): void => {
+	root.querySelectorAll<HTMLElement>("[data-fill]").forEach(applyFill);
+};
 
-const observe = () => {
+const observe = (): MutationObserver => {
 	const observer = new MutationObserver((mutations) => {
 		for (const mutation of mutations) {
-			if (mutation.type === "attributes" && mutation.target.hasAttribute("data-fill")) {
+			if (
+				mutation.type === "attributes" &&
+				mutation.target instanceof HTMLElement &&
+				mutation.target.hasAttribute("data-fill")
+			) {
 				applyFill(mutation.target);
 			}
 			for (const node of mutation.addedNodes) {
-				if (node.nodeType !== 1) continue;
+				if (!(node instanceof HTMLElement)) continue;
 				if (node.hasAttribute("data-fill")) applyFill(node);
-				node.querySelectorAll?.("[data-fill]").forEach(applyFill);
+				node.querySelectorAll<HTMLElement>("[data-fill]").forEach(applyFill);
 			}
 		}
 	});
@@ -74,12 +79,12 @@ const observe = () => {
 	});
 
 	return observer;
-}
+};
 
-const init = () => {
+const init = (): void => {
 	scan();
 	observe();
-}
+};
 
 if (document.readyState === "loading") {
 	document.addEventListener("DOMContentLoaded", init);
