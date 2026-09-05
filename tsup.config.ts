@@ -10,5 +10,5 @@ export default defineConfig({
 	sourcemap: true,
 	clean: true,
 	target: "es2020",
-	external: ["react"],
+	external: ["react", "react/jsx-runtime", "react/jsx-dev-runtime"],
 });
